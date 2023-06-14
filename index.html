@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Random Meme Generator</title>
+  <style>
+    body {
+      text-align: center;
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #333;
+    }
+
+    #memeContainer {
+      max-width: 500px;
+      margin: 20px auto;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    #memeImage {
+      max-width: 100%;
+    }
+
+    #generateButton {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+
+    #generateButton:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Random Meme Generator</h1>
+  <div id="memeContainer">
+    <img id="memeImage" src="" alt="Random Meme">
+  </div>
+  <button id="generateButton">Generate Random Meme</button>
+
+  <script>
+    const generateButton = document.getElementById('generateButton');
+    const memeImage = document.getElementById('memeImage');
+
+    function generateRandomMeme() {
+      fetch('https://meme-api.com/gimme')
+        .then(response => response.json())
+        .then(data => {
+          if (data.url) {
+            memeImage.src = data.url;
+            memeImage.alt = data.title;
+          } else {
+            throw new Error('Image URL not found in API response.');
+          }
+        })
+        .catch(error => console.error(error));
+    }
+
+    generateButton.addEventListener('click', generateRandomMeme);
+
+    // Preload meme image on page load
+    window.addEventListener('load', () => {
+      fetch('https://meme-api.com/gimme')
+        .then(response => response.json())
+        .then(data => {
+          if (data.url) {
+            const img = new Image();
+            img.src = data.url;
+          }
+        })
+        .catch(error => console.error(error));
+    });
+  </script>
+</body>
+</html>
